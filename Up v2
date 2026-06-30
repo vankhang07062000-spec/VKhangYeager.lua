@@ -226,10 +226,10 @@ end)
 lagBtn.MouseButton1Click:Connect(function()
 
 
-Lighting.Brightness=5
-Lighting.ClockTime=14
+Lighting.Brightness=3
+Lighting.ClockTime=12
 Lighting.GlobalShadows=false
-Lighting.FogEnd=100000
+Lighting.FogEnd=1000000
 
 
 for _,v in pairs(workspace:GetDescendants()) do
