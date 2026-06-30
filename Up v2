@@ -1,0 +1,278 @@
+-- VKHANG YEAGER 🇻🇳 KEY MENU v3
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local Lighting = game:GetService("Lighting")
+local VirtualUser = game:GetService("VirtualUser")
+
+local player = Players.LocalPlayer
+
+
+local gui = Instance.new("ScreenGui",player.PlayerGui)
+gui.ResetOnSpawn=false
+
+
+-- KEY SYSTEM
+
+local keyGui = Instance.new("Frame",gui)
+keyGui.Size=UDim2.new(0,250,0,150)
+keyGui.Position=UDim2.new(.5,-125,.5,-75)
+keyGui.BackgroundColor3=Color3.fromRGB(0,0,0)
+
+
+local box=Instance.new("TextBox",keyGui)
+box.Size=UDim2.new(.8,0,0,40)
+box.Position=UDim2.new(.1,0,.25,0)
+box.PlaceholderText="Enter Key"
+
+
+local get=Instance.new("TextButton",keyGui)
+get.Size=UDim2.new(.8,0,0,35)
+get.Position=UDim2.new(.1,0,.6,0)
+get.Text="Get Key"
+
+
+local open=false
+
+
+get.MouseButton1Click:Connect(function()
+
+if box.Text=="VKHANGVN" then
+
+keyGui:Destroy()
+
+open=true
+
+else
+
+box.Text="Sai Key"
+
+end
+
+end)
+
+
+
+-- MENU
+
+local menu=Instance.new("Frame",gui)
+menu.Visible=false
+menu.Size=UDim2.new(0,230,0,320)
+menu.Position=UDim2.new(.05,0,.3,0)
+menu.BackgroundColor3=Color3.fromRGB(0,0,0)
+menu.Active=true
+menu.Draggable=true
+
+
+local title=Instance.new("TextLabel",menu)
+title.Size=UDim2.new(1,0,0,40)
+title.Text="VKhang Yeager 🇻🇳"
+title.TextColor3=Color3.new(1,1,1)
+title.BackgroundTransparency=1
+title.TextScaled=true
+
+
+
+local function btn(text,y)
+
+local b=Instance.new("TextButton",menu)
+b.Size=UDim2.new(.85,0,0,35)
+b.Position=UDim2.new(.075,0,0,y)
+b.Text=text
+
+return b
+
+end
+
+
+local speedBtn=btn("Speed OFF",50)
+local jumpBtn=btn("Jump OFF",90)
+local noclipBtn=btn("Noclip OFF",130)
+local lagBtn=btn("FIX LAG",170)
+
+local flySpeedBtn=btn("Fly Speed: 200",210)
+
+
+
+-- FLY
+
+local flyButton=Instance.new("TextButton",gui)
+
+flyButton.Size=UDim2.new(0,90,0,50)
+flyButton.Position=UDim2.new(.75,0,.5,0)
+flyButton.Text="FLY OFF"
+flyButton.Draggable=true
+
+
+local fly=false
+local flySpeed=200
+
+
+flyButton.MouseButton1Click:Connect(function()
+
+fly=not fly
+flyButton.Text=fly and "FLY ON" or "FLY OFF"
+
+end)
+
+
+
+flySpeedBtn.MouseButton1Click:Connect(function()
+
+flySpeed=flySpeed+50
+
+if flySpeed>550 then
+flySpeed=200
+end
+
+flySpeedBtn.Text="Fly Speed: "..flySpeed
+
+end)
+
+
+
+RunService.RenderStepped:Connect(function()
+
+if not fly then return end
+
+local char=player.Character
+
+if char then
+
+local root=char:FindFirstChild("HumanoidRootPart")
+
+if root then
+
+root.AssemblyLinearVelocity=
+workspace.CurrentCamera.CFrame.LookVector * flySpeed
+
+end
+
+end
+
+end)
+
+
+
+-- SPEED
+
+local speed=false
+
+speedBtn.MouseButton1Click:Connect(function()
+
+speed=not speed
+
+speedBtn.Text=speed and "Speed ON" or "Speed OFF"
+
+local h=player.Character:FindFirstChildOfClass("Humanoid")
+
+if h then
+h.WalkSpeed=speed and 100 or 16
+end
+
+end)
+
+
+
+-- JUMP
+
+jumpBtn.MouseButton1Click:Connect(function()
+
+local h=player.Character:FindFirstChildOfClass("Humanoid")
+
+if h then
+h.JumpPower=150
+end
+
+jumpBtn.Text="Jump ON"
+
+end)
+
+
+
+-- NOCLIP
+
+local noclip=false
+
+noclipBtn.MouseButton1Click:Connect(function()
+
+noclip=not noclip
+
+noclipBtn.Text=noclip and "Noclip ON" or "Noclip OFF"
+
+end)
+
+
+RunService.Stepped:Connect(function()
+
+if noclip and player.Character then
+
+for _,v in pairs(player.Character:GetDescendants()) do
+
+if v:IsA("BasePart") then
+v.CanCollide=false
+end
+
+end
+
+end
+
+end)
+
+
+
+-- FIX LAG + MAP SÁNG
+
+lagBtn.MouseButton1Click:Connect(function()
+
+
+Lighting.Brightness=5
+Lighting.ClockTime=14
+Lighting.GlobalShadows=false
+Lighting.FogEnd=100000
+
+
+for _,v in pairs(workspace:GetDescendants()) do
+
+if v:IsA("ParticleEmitter")
+or v:IsA("Trail")
+or v:IsA("Smoke")
+or v:IsA("Fire") then
+
+v.Enabled=false
+
+end
+
+end
+
+end)
+
+
+
+-- ANTI AFK
+
+player.Idled:Connect(function()
+
+VirtualUser:CaptureController()
+VirtualUser:ClickButton2(Vector2.new())
+
+end)
+
+
+-- SHOW MENU AFTER KEY
+
+task.spawn(function()
+
+while task.wait() do
+
+if open then
+
+menu.Visible=true
+
+break
+
+end
+
+end
+
+end)
