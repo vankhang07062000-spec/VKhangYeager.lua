@@ -1,0 +1,98 @@
+-- VKHANG YEAGER 🇻🇳 CLEAN VERSION
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local Lighting = game:GetService("Lighting")
+local VirtualUser = game:GetService("VirtualUser")
+local UserInputService = game:GetService("UserInputService")
+
+local player = Players.LocalPlayer
+local camera = workspace.CurrentCamera
+
+------------------------------------------------
+-- 🌞 MAP SÁNG + VIEW XA (NO EFFECTS)
+------------------------------------------------
+Lighting.Brightness = 3
+Lighting.ClockTime = 14
+Lighting.GlobalShadows = false
+Lighting.FogStart = 0
+Lighting.FogEnd = 100000
+Lighting.Ambient = Color3.new(1,1,1)
+Lighting.OutdoorAmbient = Color3.new(1,1,1)
+camera.FieldOfView = 110
+
+------------------------------------------------
+-- ❌ XOÁ HIỆU ỨNG (CLEAN LAG)
+------------------------------------------------
+task.spawn(function()
+	while true do
+		task.wait(5)
+
+		for _,v in pairs(workspace:GetDescendants()) do
+			if v:IsA("ParticleEmitter")
+			or v:IsA("Trail")
+			or v:IsA("Smoke")
+			or v:IsA("Fire") then
+				v:Destroy()
+			end
+		end
+	end
+end)
+
+------------------------------------------------
+-- UI MENU
+------------------------------------------------
+local gui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+gui.ResetOnSpawn = false
+
+local menu = Instance.new("Frame", gui)
+menu.Size = UDim2.new(0,200,0,160)
+menu.Position = UDim2.new(0.3,0,0.3,0)
+menu.BackgroundColor3 = Color3.fromRGB(30,120,255)
+menu.Active = true
+
+Instance.new("UICorner", menu).CornerRadius = UDim.new(0,14)
+
+local title = Instance.new("TextLabel", menu)
+title.Size = UDim2.new(1,0,0,30)
+title.BackgroundTransparency = 1
+title.Text = "VKhang Yeager 🇻🇳"
+title.TextScaled = true
+
+------------------------------------------------
+-- 🪽 FLY RỜI (OUTSIDE MENU)
+------------------------------------------------
+local flyBtn = Instance.new("TextButton", gui)
+flyBtn.Size = UDim2.new(0,80,0,50)
+flyBtn.Position = UDim2.new(0.75,0,0.5,0)
+flyBtn.Text = "FLY OFF"
+flyBtn.Active = true
+flyBtn.Draggable = true
+
+local fly = false
+local speed = 70
+
+flyBtn.MouseButton1Click:Connect(function()
+	fly = not fly
+	flyBtn.Text = fly and "FLY ON" or "FLY OFF"
+end)
+
+RunService.RenderStepped:Connect(function()
+	local char = player.Character
+	if not char then return end
+
+	local root = char:FindFirstChild("HumanoidRootPart")
+	if not root then return end
+
+	if fly then
+		root.Velocity = camera.CFrame.LookVector * speed
+	end
+end)
+
+------------------------------------------------
+-- 🛡 ANTI AFK
+------------------------------------------------
+player.Idled:Connect(function()
+	VirtualUser:CaptureController()
+	VirtualUser:ClickButton2(Vector2.new())
+end)
