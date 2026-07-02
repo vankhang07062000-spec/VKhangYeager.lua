@@ -241,57 +241,54 @@ end)
 -- FIX LAG CỰC MẠNH
 
 lagBtn.MouseButton1Click:Connect(function()
+local Lighting = game:GetService("Lighting")
+local Terrain = workspace:FindFirstChildOfClass("Terrain")
 
+Lighting.GlobalShadows = false
+Lighting.Brightness = 3
+Lighting.ClockTime = 14
+Lighting.FogStart = 0
+Lighting.FogEnd = 100000
+Lighting.Ambient = Color3.new(1,1,1)
+Lighting.OutdoorAmbient = Color3.new(1,1,1)
 
-Lighting.Brightness=5
-Lighting.ClockTime=14
-Lighting.GlobalShadows=false
-Lighting.FogStart=0
-Lighting.FogEnd=100000
-Lighting.Ambient=Color3.new(1,1,1)
-Lighting.OutdoorAmbient=Color3.new(1,1,1)
-
-
+if Terrain then
+	Terrain.WaterWaveSize = 0
+	Terrain.WaterWaveSpeed = 0
+	Terrain.WaterReflectance = 0
+	Terrain.WaterTransparency = 1
+end
 
 pcall(function()
-
-settings().Rendering.QualityLevel =
-Enum.QualityLevel.Level01
-
+	Lighting.Clouds:Destroy()
 end)
 
-
-
-for _,v in pairs(workspace:GetDescendants()) do
-
-
-if v:IsA("ParticleEmitter")
-or v:IsA("Trail")
-or v:IsA("Smoke")
-or v:IsA("Fire")
-or v:IsA("Sparkles")
-or v:IsA("Explosion") then
-
-
-v:Destroy()
-
-
+for _,v in ipairs(Lighting:GetChildren()) do
+	if v:IsA("Atmosphere")
+	or v:IsA("Sky")
+	or v:IsA("BloomEffect")
+	or v:IsA("SunRaysEffect")
+	or v:IsA("ColorCorrectionEffect")
+	or v:IsA("BlurEffect")
+	or v:IsA("DepthOfFieldEffect") then
+		v:Destroy()
+	end
 end
 
-
-
-if v:IsA("BasePart") then
-
-v.Material=Enum.Material.Plastic
-
-end
-
-
-end
-
-
+task.spawn(function()
+	while task.wait(3) do
+		for _,v in ipairs(workspace:GetDescendants()) do
+			if v:IsA("ParticleEmitter")
+			or v:IsA("Trail")
+			or v:IsA("Smoke")
+			or v:IsA("Fire")
+			or v:IsA("Sparkles")
+			or v:IsA("Explosion") then
+				v:Destroy()
+			end
+		end
+	end
 end)
-
 
 
 
