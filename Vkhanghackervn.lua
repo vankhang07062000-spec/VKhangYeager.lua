@@ -240,7 +240,6 @@ end)
 
 -- FIX LAG CỰC MẠNH
 
-lagBtn.MouseButton1Click:Connect(function()
 local Lighting = game:GetService("Lighting")
 local Terrain = workspace:FindFirstChildOfClass("Terrain")
 
