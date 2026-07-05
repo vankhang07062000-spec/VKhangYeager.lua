@@ -245,6 +245,22 @@ P.Idled:Connect(function()
 
 end)
 
+local ShaderEnabled = false
 
+local function ToggleShader()
+    ShaderEnabled = not ShaderEnabled
+
+    if ShaderEnabled then
+        game.Lighting.Brightness = 3
+        game.Lighting.GlobalShadows = true
+        -- Bật Bloom, ColorCorrection, Atmosphere...
+    else
+        game.Lighting.Brightness = 2
+        game.Lighting.GlobalShadows = false
+        -- Tắt hoặc xóa các hiệu ứng đã thêm
+    end
+end
+
+ShaderButton.MouseButton1Click:Connect(ToggleShader)
 
 print("🇻🇳 VKhang Yeager Loaded")
