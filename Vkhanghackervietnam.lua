@@ -299,7 +299,39 @@ local gui = Instance.new("ScreenGui")
 gui.Name = "VKChatMenu"
 gui.ResetOnSpawn = false
 gui.Parent = player.PlayerGui
+local TextChatService = game:GetService("TextChatService")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
 
+local gui = Instance.new("ScreenGui")
+gui.Parent = player.PlayerGui
+
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0,300,0,120)
+frame.Position = UDim2.new(0.5,-150,0.7,0)
+frame.Parent = gui
+
+local box = Instance.new("TextBox")
+box.Size = UDim2.new(1,-20,0,40)
+box.Position = UDim2.new(0,10,0,10)
+box.PlaceholderText = "Nhập tin nhắn..."
+box.Parent = frame
+
+local send = Instance.new("TextButton")
+send.Size = UDim2.new(1,-20,0,40)
+send.Position = UDim2.new(0,10,0,60)
+send.Text = "Gửi"
+send.Parent = frame
+
+send.MouseButton1Click:Connect(function()
+	local text = box.Text
+	if text ~= "" then
+		local channel = TextChatService.TextChannels:FindFirstChild("RBXGeneral")
+		if channel then
+			channel:SendAsync(text)
+		end
+	end
+end)
 -------------------------------------------------
 -- NÚT CHAT
 -------------------------------------------------
@@ -314,62 +346,6 @@ ChatBtn.TextColor3 = Color3.new(1,1,1)
 ChatBtn.BorderSizePixel = 0
 
 Instance.new("UICorner",ChatBtn).CornerRadius = UDim.new(1,0)
-
--------------------------------------------------
--- KHUNG CHAT
--------------------------------------------------
-local Frame = Instance.new("Frame")
-Frame.Parent = gui
-Frame.Size = UDim2.new(0,360,0,240)
-Frame.Position = UDim2.new(0.5,-180,0.3,0)
-Frame.BackgroundColor3 = Color3.fromRGB(25,25,25)
-Frame.Visible = false
-Frame.BorderSizePixel = 0
-
-Instance.new("UICorner",Frame).CornerRadius = UDim.new(0,10)
-
-local Title = Instance.new("TextLabel")
-Title.Parent = Frame
-Title.Size = UDim2.new(1,0,0,35)
-Title.BackgroundTransparency = 1
-Title.Text = "💬 Chat Menu"
-Title.TextColor3 = Color3.new(1,1,1)
-Title.TextScaled = true
-
-local Messages = Instance.new("TextBox")
-Messages.Parent = Frame
-Messages.Size = UDim2.new(1,-20,0,140)
-Messages.Position = UDim2.new(0,10,0,40)
-Messages.MultiLine = true
-Messages.ClearTextOnFocus = false
-Messages.TextXAlignment = Enum.TextXAlignment.Left
-Messages.TextYAlignment = Enum.TextYAlignment.Top
-Messages.Text = ""
-Messages.PlaceholderText = "Nội dung chat..."
-Messages.BackgroundColor3 = Color3.fromRGB(40,40,40)
-Messages.TextColor3 = Color3.new(1,1,1)
-
-Instance.new("UICorner",Messages).CornerRadius = UDim.new(0,8)
-
-local Input = Instance.new("TextBox")
-Input.Parent = Frame
-Input.Size = UDim2.new(0.75,-15,0,35)
-Input.Position = UDim2.new(0,10,1,-45)
-Input.PlaceholderText = "Nhập tin nhắn..."
-Input.BackgroundColor3 = Color3.fromRGB(45,45,45)
-Input.TextColor3 = Color3.new(1,1,1)
-
-Instance.new("UICorner",Input).CornerRadius = UDim.new(0,8)
-
-local Send = Instance.new("TextButton")
-Send.Parent = Frame
-Send.Size = UDim2.new(0.25,-15,0,35)
-Send.Position = UDim2.new(0.75+0.01,0,1,-45)
-Send.Text = "Gửi"
-Send.BackgroundColor3 = Color3.fromRGB(0,170,255)
-Send.TextColor3 = Color3.new(1,1,1)
-
-Instance.new("UICorner",Send).CornerRadius = UDim.new(0,8)
 
 -------------------------------------------------
 -- BẬT/TẮT CHAT
