@@ -289,64 +289,155 @@ task.spawn(function()
 	end
 end)
 
--- Nút mở chat
-local ChatOpen = Instance.new("TextButton", gui)
-ChatOpen.Size = UDim2.new(0,70,0,40)
-ChatOpen.Position = UDim2.new(0.82,0,0.1,0)
-ChatOpen.Text = "💬 Chat"
+local Players = game:GetService("Players")
+local UIS = game:GetService("UserInputService")
 
--- Cho phép kéo nút
-ChatOpen.Active = true
-ChatOpen.Draggable = true
+local player = Players.LocalPlayer
 
--- Khung chat
-local ChatFrame = Instance.new("Frame", gui)
-ChatFrame.Size = UDim2.new(0,350,0,220)
-ChatFrame.Position = UDim2.new(0.5,-175,0.25,0)
-ChatFrame.BackgroundColor3 = Color3.fromRGB(25,25,25)
-ChatFrame.BorderSizePixel = 0
-ChatFrame.Active = true
-ChatFrame.Draggable = true
-ChatFrame.Visible = false
+-- GUI
+local gui = Instance.new("ScreenGui")
+gui.Name = "VKChatMenu"
+gui.ResetOnSpawn = false
+gui.Parent = player.PlayerGui
 
--- Tiêu đề
-local Title = Instance.new("TextLabel", ChatFrame)
-Title.Size = UDim2.new(1,-35,0,35)
+-------------------------------------------------
+-- NÚT CHAT
+-------------------------------------------------
+local ChatBtn = Instance.new("TextButton")
+ChatBtn.Parent = gui
+ChatBtn.Size = UDim2.new(0,60,0,60)
+ChatBtn.Position = UDim2.new(0,20,0.5,-30)
+ChatBtn.BackgroundColor3 = Color3.fromRGB(30,30,30)
+ChatBtn.Text = "💬"
+ChatBtn.TextScaled = true
+ChatBtn.TextColor3 = Color3.new(1,1,1)
+ChatBtn.BorderSizePixel = 0
+
+Instance.new("UICorner",ChatBtn).CornerRadius = UDim.new(1,0)
+
+-------------------------------------------------
+-- KHUNG CHAT
+-------------------------------------------------
+local Frame = Instance.new("Frame")
+Frame.Parent = gui
+Frame.Size = UDim2.new(0,360,0,240)
+Frame.Position = UDim2.new(0.5,-180,0.3,0)
+Frame.BackgroundColor3 = Color3.fromRGB(25,25,25)
+Frame.Visible = false
+Frame.BorderSizePixel = 0
+
+Instance.new("UICorner",Frame).CornerRadius = UDim.new(0,10)
+
+local Title = Instance.new("TextLabel")
+Title.Parent = Frame
+Title.Size = UDim2.new(1,0,0,35)
 Title.BackgroundTransparency = 1
-Title.Text = "💬 VKhang Yeager Chat"
-Title.TextScaled = true
+Title.Text = "💬 Chat Menu"
 Title.TextColor3 = Color3.new(1,1,1)
+Title.TextScaled = true
 
--- Nút đóng
-local Close = Instance.new("TextButton", ChatFrame)
-Close.Size = UDim2.new(0,30,0,30)
-Close.Position = UDim2.new(1,-35,0,2)
-Close.Text = "✖"
+local Messages = Instance.new("TextBox")
+Messages.Parent = Frame
+Messages.Size = UDim2.new(1,-20,0,140)
+Messages.Position = UDim2.new(0,10,0,40)
+Messages.MultiLine = true
+Messages.ClearTextOnFocus = false
+Messages.TextXAlignment = Enum.TextXAlignment.Left
+Messages.TextYAlignment = Enum.TextYAlignment.Top
+Messages.Text = ""
+Messages.PlaceholderText = "Nội dung chat..."
+Messages.BackgroundColor3 = Color3.fromRGB(40,40,40)
+Messages.TextColor3 = Color3.new(1,1,1)
 
-Close.MouseButton1Click:Connect(function()
-	ChatFrame.Visible = false
+Instance.new("UICorner",Messages).CornerRadius = UDim.new(0,8)
+
+local Input = Instance.new("TextBox")
+Input.Parent = Frame
+Input.Size = UDim2.new(0.75,-15,0,35)
+Input.Position = UDim2.new(0,10,1,-45)
+Input.PlaceholderText = "Nhập tin nhắn..."
+Input.BackgroundColor3 = Color3.fromRGB(45,45,45)
+Input.TextColor3 = Color3.new(1,1,1)
+
+Instance.new("UICorner",Input).CornerRadius = UDim.new(0,8)
+
+local Send = Instance.new("TextButton")
+Send.Parent = Frame
+Send.Size = UDim2.new(0.25,-15,0,35)
+Send.Position = UDim2.new(0.75+0.01,0,1,-45)
+Send.Text = "Gửi"
+Send.BackgroundColor3 = Color3.fromRGB(0,170,255)
+Send.TextColor3 = Color3.new(1,1,1)
+
+Instance.new("UICorner",Send).CornerRadius = UDim.new(0,8)
+
+-------------------------------------------------
+-- BẬT/TẮT CHAT
+-------------------------------------------------
+ChatBtn.MouseButton1Click:Connect(function()
+	Frame.Visible = not Frame.Visible
 end)
 
--- Mở/đóng
-ChatOpen.MouseButton1Click:Connect(function()
-	ChatFrame.Visible = not ChatFrame.Visible
+-------------------------------------------------
+-- GỬI CHAT
+-------------------------------------------------
+Send.MouseButton1Click:Connect(function()
+	if Input.Text ~= "" then
+		Messages.Text = Messages.Text .. "\nBạn: "..Input.Text
+		Input.Text = ""
+	end
 end)
 
--- Ô nhập
-local ChatBox = Instance.new("TextBox", ChatFrame)
-ChatBox.Size = UDim2.new(0.9,0,0,110)
-ChatBox.Position = UDim2.new(0.05,0,0,45)
-ChatBox.MultiLine = true
-ChatBox.TextWrapped = true
-ChatBox.ClearTextOnFocus = false
-ChatBox.PlaceholderText = "Nhập nội dung..."
-ChatBox.Text = ""
+-------------------------------------------------
+-- HÀM KÉO THẢ
+-------------------------------------------------
+local function Drag(Object)
+	local dragging=false
+	local dragInput
+	local dragStart
+	local startPos
 
--- Nút gửi
-local SendBtn = Instance.new("TextButton", ChatFrame)
-SendBtn.Size = UDim2.new(0.9,0,0,40)
-SendBtn.Position = UDim2.new(0.05,0,0,165)
-SendBtn.Text = "💬 Gửi"
+	local function update(input)
+		local delta=input.Position-dragStart
+		Object.Position=UDim2.new(
+			startPos.X.Scale,
+			startPos.X.Offset+delta.X,
+			startPos.Y.Scale,
+			startPos.Y.Offset+delta.Y
+		)
+	end
+
+	Object.InputBegan:Connect(function(input)
+		if input.UserInputType==Enum.UserInputType.MouseButton1
+		or input.UserInputType==Enum.UserInputType.Touch then
+			dragging=true
+			dragStart=input.Position
+			startPos=Object.Position
+
+			input.Changed:Connect(function()
+				if input.UserInputState==Enum.UserInputState.End then
+					dragging=false
+				end
+			end)
+		end
+	end)
+
+	Object.InputChanged:Connect(function(input)
+		if input.UserInputType==Enum.UserInputType.MouseMovement
+		or input.UserInputType==Enum.UserInputType.Touch then
+			dragInput=input
+		end
+	end)
+
+	UIS.InputChanged:Connect(function(input)
+		if input==dragInput and dragging then
+			update(input)
+		end
+	end)
+end
+
+Drag(ChatBtn)
+Drag(Frame)
 -- ANTI AFK
 
 player.Idled:Connect(function()
