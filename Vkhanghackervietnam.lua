@@ -15,7 +15,7 @@ gui.ResetOnSpawn=false
 -- MENU
 
 local menu = Instance.new("Frame",gui)
-menu.Size=UDim2.new(0,230,0,310)
+menu.Size = UDim2.new(0,230,0,390)
 menu.Position=UDim2.new(.05,0,.3,0)
 menu.BackgroundColor3=Color3.fromRGB(0,0,0)
 menu.Active=true
@@ -289,8 +289,47 @@ task.spawn(function()
 	end
 end)
 
+local TextChatService = game:GetService("TextChatService")
 
+-- Nút mở/đóng
+local ChatToggle = Instance.new("TextButton", gui)
+ChatToggle.Size = UDim2.new(0,70,0,40)
+ChatToggle.Position = UDim2.new(0.82,0,0.1,0)
+ChatToggle.Text = "💬 Chat"
 
+-- Khung chat
+local ChatFrame = Instance.new("Frame", gui)
+ChatFrame.Size = UDim2.new(0,220,0,110)
+ChatFrame.Position = UDim2.new(0.7,0,0.2,0)
+ChatFrame.BackgroundColor3 = Color3.fromRGB(25,25,25)
+ChatFrame.Active = true
+ChatFrame.Draggable = true
+ChatFrame.Visible = false
+
+ChatToggle.MouseButton1Click:Connect(function()
+	ChatFrame.Visible = not ChatFrame.Visible
+end)
+
+local ChatBox = Instance.new("TextBox", ChatFrame)
+ChatBox.Size = UDim2.new(0.9,0,0,30)
+ChatBox.Position = UDim2.new(0.05,0,0.1,0)
+ChatBox.PlaceholderText = "Nhập tin nhắn..."
+ChatBox.Text = ""
+
+local SendBtn = Instance.new("TextButton", ChatFrame)
+SendBtn.Size = UDim2.new(0.9,0,0,30)
+SendBtn.Position = UDim2.new(0.05,0,0.55,0)
+SendBtn.Text = "💬 Gửi"
+
+SendBtn.MouseButton1Click:Connect(function()
+	if ChatBox.Text ~= "" then
+		local channel = TextChatService:WaitForChild("TextChannels"):FindFirstChild("RBXGeneral")
+		if channel then
+			channel:SendAsync(ChatBox.Text)
+			ChatBox.Text = ""
+		end
+	end
+end)
 -- ANTI AFK
 
 player.Idled:Connect(function()
