@@ -289,131 +289,69 @@ task.spawn(function()
 	end
 end)
 
-local Players = game:GetService("Players")
 local UIS = game:GetService("UserInputService")
 
-local player = Players.LocalPlayer
-
--- GUI
-local gui = Instance.new("ScreenGui")
-gui.Name = "VKChatMenu"
-gui.ResetOnSpawn = false
-gui.Parent = player.PlayerGui
-local TextChatService = game:GetService("TextChatService")
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
-
-local gui = Instance.new("ScreenGui")
-gui.Parent = player.PlayerGui
-
-local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0,300,0,120)
-frame.Position = UDim2.new(0.5,-150,0.7,0)
-frame.Parent = gui
-
-local box = Instance.new("TextBox")
-box.Size = UDim2.new(1,-20,0,40)
-box.Position = UDim2.new(0,10,0,10)
-box.PlaceholderText = "Nhập tin nhắn..."
-box.Parent = frame
-
-local send = Instance.new("TextButton")
-send.Size = UDim2.new(1,-20,0,40)
-send.Position = UDim2.new(0,10,0,60)
-send.Text = "Gửi"
-send.Parent = frame
-
-send.MouseButton1Click:Connect(function()
-	local text = box.Text
-	if text ~= "" then
-		local channel = TextChatService.TextChannels:FindFirstChild("RBXGeneral")
-		if channel then
-			channel:SendAsync(text)
-		end
-	end
-end)
--------------------------------------------------
 -- NÚT CHAT
--------------------------------------------------
-local ChatBtn = Instance.new("TextButton")
-ChatBtn.Parent = gui
-ChatBtn.Size = UDim2.new(0,60,0,60)
-ChatBtn.Position = UDim2.new(0,20,0.5,-30)
-ChatBtn.BackgroundColor3 = Color3.fromRGB(30,30,30)
-ChatBtn.Text = "💬"
-ChatBtn.TextScaled = true
-ChatBtn.TextColor3 = Color3.new(1,1,1)
-ChatBtn.BorderSizePixel = 0
+local open = Instance.new("TextButton")
+open.Parent = gui
+open.Size = UDim2.new(0,60,0,60)
+open.Position = UDim2.new(0,20,0.5,-30)
+open.Text = "💬"
+open.BackgroundColor3 = Color3.fromRGB(35,35,35)
+open.TextColor3 = Color3.new(1,1,1)
+open.TextScaled = true
 
-Instance.new("UICorner",ChatBtn).CornerRadius = UDim.new(1,0)
+-- Ẩn chat lúc đầu
+frame.Visible = false
 
--------------------------------------------------
--- BẬT/TẮT CHAT
--------------------------------------------------
-ChatBtn.MouseButton1Click:Connect(function()
-	Frame.Visible = not Frame.Visible
+-- Mở/Đóng
+open.MouseButton1Click:Connect(function()
+	frame.Visible = not frame.Visible
 end)
 
--------------------------------------------------
--- GỬI CHAT
--------------------------------------------------
-Send.MouseButton1Click:Connect(function()
-	if Input.Text ~= "" then
-		Messages.Text = Messages.Text .. "\nBạn: "..Input.Text
-		Input.Text = ""
-	end
-end)
-
--------------------------------------------------
--- HÀM KÉO THẢ
--------------------------------------------------
-local function Drag(Object)
-	local dragging=false
-	local dragInput
+-- Hàm kéo
+local function MakeDraggable(obj)
+	local dragging = false
 	local dragStart
 	local startPos
 
-	local function update(input)
-		local delta=input.Position-dragStart
-		Object.Position=UDim2.new(
-			startPos.X.Scale,
-			startPos.X.Offset+delta.X,
-			startPos.Y.Scale,
-			startPos.Y.Offset+delta.Y
-		)
-	end
-
-	Object.InputBegan:Connect(function(input)
-		if input.UserInputType==Enum.UserInputType.MouseButton1
-		or input.UserInputType==Enum.UserInputType.Touch then
-			dragging=true
-			dragStart=input.Position
-			startPos=Object.Position
+	obj.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.Touch
+		or input.UserInputType == Enum.UserInputType.MouseButton1 then
+			dragging = true
+			dragStart = input.Position
+			startPos = obj.Position
 
 			input.Changed:Connect(function()
-				if input.UserInputState==Enum.UserInputState.End then
-					dragging=false
+				if input.UserInputState == Enum.UserInputState.End then
+					dragging = false
 				end
 			end)
 		end
 	end)
 
-	Object.InputChanged:Connect(function(input)
-		if input.UserInputType==Enum.UserInputType.MouseMovement
-		or input.UserInputType==Enum.UserInputType.Touch then
-			dragInput=input
-		end
-	end)
-
-	UIS.InputChanged:Connect(function(input)
-		if input==dragInput and dragging then
-			update(input)
+	obj.InputChanged:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.Touch
+		or input.UserInputType == Enum.UserInputType.MouseMovement then
+			UIS.InputChanged:Connect(function(move)
+				if dragging and move == input then
+					local delta = move.Position - dragStart
+					obj.Position = UDim2.new(
+						startPos.X.Scale,
+						startPos.X.Offset + delta.X,
+						startPos.Y.Scale,
+						startPos.Y.Offset + delta.Y
+					)
+				end
+			end)
 		end
 	end)
 end
 
-Drag(ChatBtn)
-Drag(Frame)
+-- Cho phép kéo
+MakeDraggable(open)
+MakeDraggable(frame)
+
 -- ANTI AFK
 
 player.Idled:Connect(function()
