@@ -288,7 +288,39 @@ task.spawn(function()
 		end
 	end
 end)
+local TextChatService = game:GetService("TextChatService")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
 
+local gui = Instance.new("ScreenGui")
+gui.Parent = player.PlayerGui
+
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0,300,0,120)
+frame.Position = UDim2.new(0.5,-150,0.7,0)
+frame.Parent = gui
+
+local box = Instance.new("TextBox")
+box.Size = UDim2.new(1,-20,0,40)
+box.Position = UDim2.new(0,10,0,10)
+box.PlaceholderText = "Nhập tin nhắn..."
+box.Parent = frame
+
+local send = Instance.new("TextButton")
+send.Size = UDim2.new(1,-20,0,40)
+send.Position = UDim2.new(0,10,0,60)
+send.Text = "Gửi"
+send.Parent = frame
+
+send.MouseButton1Click:Connect(function()
+	local text = box.Text
+	if text ~= "" then
+		local channel = TextChatService.TextChannels:FindFirstChild("RBXGeneral")
+		if channel then
+			channel:SendAsync(text)
+		end
+	end
+end)
 
 
 
