@@ -288,34 +288,6 @@ task.spawn(function()
 		end
 	end
 end)
--- Ô nhập chat
-local ChatBox = Instance.new("TextBox")
-ChatBox.Parent = MainFrame
-ChatBox.Size = UDim2.new(0.9,0,0,30)
-ChatBox.Position = UDim2.new(0.05,0,0.75,0)
-ChatBox.PlaceholderText = "Nhập tin nhắn..."
-ChatBox.Text = ""
-
--- Nút gửi
-local SendBtn = Instance.new("TextButton")
-SendBtn.Parent = MainFrame
-SendBtn.Size = UDim2.new(0.9,0,0,30)
-SendBtn.Position = UDim2.new(0.05,0,0.87,0)
-SendBtn.Text = "💬 Gửi"
-
-local TextChatService = game:GetService("TextChatService")
-
-SendBtn.MouseButton1Click:Connect(function()
-	if ChatBox.Text ~= "" then
-		local channel = TextChatService:FindFirstChild("TextChannels")
-			and TextChatService.TextChannels:FindFirstChild("RBXGeneral")
-
-		if channel then
-			channel:SendAsync(ChatBox.Text)
-			ChatBox.Text = ""
-		end
-	end
-end)
 
 
 
