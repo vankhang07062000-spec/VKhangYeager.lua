@@ -301,7 +301,7 @@ ChatOpen.Draggable = true
 
 -- Khung chat
 local ChatFrame = Instance.new("Frame", gui)
-ChatFrame.Size = UDim2.new(0,350,0,250)
+ChatFrame.Size = UDim2.new(0,350,0,220)
 ChatFrame.Position = UDim2.new(0.5,-175,0.25,0)
 ChatFrame.BackgroundColor3 = Color3.fromRGB(25,25,25)
 ChatFrame.BorderSizePixel = 0
@@ -309,10 +309,44 @@ ChatFrame.Active = true
 ChatFrame.Draggable = true
 ChatFrame.Visible = false
 
+-- Tiêu đề
+local Title = Instance.new("TextLabel", ChatFrame)
+Title.Size = UDim2.new(1,-35,0,35)
+Title.BackgroundTransparency = 1
+Title.Text = "💬 VKhang Yeager Chat"
+Title.TextScaled = true
+Title.TextColor3 = Color3.new(1,1,1)
+
+-- Nút đóng
+local Close = Instance.new("TextButton", ChatFrame)
+Close.Size = UDim2.new(0,30,0,30)
+Close.Position = UDim2.new(1,-35,0,2)
+Close.Text = "✖"
+
+Close.MouseButton1Click:Connect(function()
+	ChatFrame.Visible = false
+end)
+
 -- Mở/đóng
 ChatOpen.MouseButton1Click:Connect(function()
 	ChatFrame.Visible = not ChatFrame.Visible
 end)
+
+-- Ô nhập
+local ChatBox = Instance.new("TextBox", ChatFrame)
+ChatBox.Size = UDim2.new(0.9,0,0,110)
+ChatBox.Position = UDim2.new(0.05,0,0,45)
+ChatBox.MultiLine = true
+ChatBox.TextWrapped = true
+ChatBox.ClearTextOnFocus = false
+ChatBox.PlaceholderText = "Nhập nội dung..."
+ChatBox.Text = ""
+
+-- Nút gửi
+local SendBtn = Instance.new("TextButton", ChatFrame)
+SendBtn.Size = UDim2.new(0.9,0,0,40)
+SendBtn.Position = UDim2.new(0.05,0,0,165)
+SendBtn.Text = "💬 Gửi"
 -- ANTI AFK
 
 player.Idled:Connect(function()
