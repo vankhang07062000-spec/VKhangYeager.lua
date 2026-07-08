@@ -112,8 +112,14 @@ end)
 local Lighting = game:GetService("Lighting")
 
 -- Xóa sương
-Lighting.FogStart = 100000
-Lighting.FogEnd = 1000000
+Lighting.FogStart = 9e9
+Lighting.FogEnd = 9e9
+
+for _, v in ipairs(game:GetService("Lighting"):GetChildren()) do
+    if v:IsA("Atmosphere") then
+        v:Destroy()
+    end
+end
 
 -- Giảm đổ bóng
 Lighting.GlobalShadows = false
