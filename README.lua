@@ -106,83 +106,54 @@ box.FocusLost:Connect(function(enterPressed)
 		SendMessage()
 	end
 end)
--- FPS BOOST + FIX LAG
+-- FPS BOOST / FIX LAG (LocalScript)
+
 local Lighting = game:GetService("Lighting")
-local Terrain = workspace.Terrain
+local Terrain = workspace:FindFirstChildOfClass("Terrain")
 
--- Ánh sáng + Xóa sương mù
+-- Lighting
 Lighting.GlobalShadows = false
+Lighting.FogStart = 100000
+Lighting.FogEnd = 1000000
 Lighting.Brightness = 2
-Lighting.ClockTime = 14
-Lighting.FogStart = 999999
-Lighting.FogEnd = 999999999
-Lighting.FogColor = Color3.new(1,1,1)
-Lighting.EnvironmentDiffuseScale = 0
-Lighting.EnvironmentSpecularScale = 0
 
--- Xóa mây
 pcall(function()
-	local clouds = Terrain:FindFirstChildOfClass("Clouds")
-	if clouds then
-		clouds:Destroy()
-	end
+	Lighting.EnvironmentDiffuseScale = 0
+	Lighting.EnvironmentSpecularScale = 0
+	Lighting.ShadowSoftness = 0
 end)
 
--- Giảm hiệu ứng nước
-Terrain.WaterWaveSize = 0
-Terrain.WaterWaveSpeed = 0
-Terrain.WaterReflectance = 0
-Terrain.WaterTransparency = 1
+-- Terrain
+if Terrain then
+	pcall(function()
+		Terrain.WaterWaveSize = 0
+		Terrain.WaterWaveSpeed = 0
+		Terrain.WaterReflectance = 0
+		Terrain.WaterTransparency = 1
+	end)
+end
 
--- Xóa hiệu ứng
-for _,v in ipairs(game:GetDescendants()) do
+-- Remove Effects
+for _, v in ipairs(game:GetDescendants()) do
 	if v:IsA("ParticleEmitter")
 	or v:IsA("Trail")
-	or v:IsA("Beam")
 	or v:IsA("Smoke")
 	or v:IsA("Fire")
-	or v:IsA("Sparkles") then
+	or v:IsA("Sparkles")
+	or v:IsA("Beam") then
 		v.Enabled = false
-	end
-
-	if v:IsA("Explosion") then
-		v:Destroy()
-	end
-
-	if v:IsA("Decal") or v:IsA("Texture") then
-		v.Transparency = 1
-	end
-
-	if v:IsA("MeshPart") then
-		pcall(function()
-			v.RenderFidelity = Enum.RenderFidelity.Performance
-		end)
 	end
 end
 
--- Tự động xóa hiệu ứng mới xuất hiện
-game.DescendantAdded:Connect(function(v)
-	if v:IsA("ParticleEmitter")
-	or v:IsA("Trail")
-	or v:IsA("Beam")
-	or v:IsA("Smoke")
-	or v:IsA("Fire")
-	or v:IsA("Sparkles") then
+-- Disable Blur/Bloom
+for _, v in ipairs(Lighting:GetChildren()) do
+	if v:IsA("BloomEffect")
+	or v:IsA("BlurEffect")
+	or v:IsA("SunRaysEffect")
+	or v:IsA("ColorCorrectionEffect")
+	or v:IsA("DepthOfFieldEffect") then
 		v.Enabled = false
 	end
-end)
+end
 
-print("FPS BOOST + NO FOG ENABLED")
--- ANTI AFK
-
-P.Idled:Connect(function()
-
-	VU:CaptureController()
-
-	VU:ClickButton2(Vector2.new())
-
-end)
-
-
-
-print("🇻🇳 VKhang Yeager Loaded")
+print("FPS BOOST Enabled")
