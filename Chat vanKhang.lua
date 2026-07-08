@@ -136,3 +136,20 @@ for _, v in ipairs(Lighting:GetChildren()) do
 end
 
 print("Fix Lag + Remove Fog Enabled!")
+
+local logo = Instance.new("TextLabel")
+logo.Parent = gui
+logo.Size = UDim2.new(0,180,0,30)
+logo.Position = UDim2.new(1,-190,0,10)
+logo.BackgroundTransparency = 1
+logo.Text = "@yrid_raden_or🇻🇳"
+logo.TextColor3 = Color3.fromRGB(255,255,255)
+logo.TextStrokeTransparency = 0.5
+logo.TextScaled = true
+logo.Font = Enum.Font.GothamBold
+logo.TextXAlignment = Enum.TextXAlignment.Right
+
+local stroke = Instance.new("UIStroke")
+stroke.Parent = logo
+stroke.Thickness = 1.5
+stroke.Color = Color3.fromRGB(0,170,255)
