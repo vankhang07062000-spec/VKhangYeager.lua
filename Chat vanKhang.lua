@@ -11,9 +11,9 @@ gui.Parent = player:WaitForChild("PlayerGui")
 -- Nút Chat
 local toggle = Instance.new("TextButton")
 toggle.Parent = gui
-toggle.Size = UDim2.new(0,60,0,60)
+toggle.Size = UDim2.new(0,5,0,50)
 toggle.Position = UDim2.new(0,20,0.5,-30)
-toggle.Text = "💬"
+toggle.Text = "🇻🇳"
 toggle.TextScaled = true
 toggle.BackgroundColor3 = Color3.fromRGB(35,35,35)
 toggle.TextColor3 = Color3.new(1,1,1)
@@ -107,42 +107,63 @@ box.FocusLost:Connect(function(enterPressed)
 	end
 end)
 
--- FIX LAG + REMOVE FOG
+-- FIX LAG CỰC MẠNH
 
 local Lighting = game:GetService("Lighting")
+local Terrain = workspace:FindFirstChildOfClass("Terrain")
 
--- Xóa sương
-Lighting.FogStart = 9e9
-Lighting.FogEnd = 9e9
+Lighting.GlobalShadows = false
+Lighting.Brightness = 3
+Lighting.ClockTime = 14
+Lighting.FogStart = 0
+Lighting.FogEnd = 100000
+Lighting.Ambient = Color3.new(1,1,1)
+Lighting.OutdoorAmbient = Color3.new(1,1,1)
 
-for _, v in ipairs(game:GetService("Lighting"):GetChildren()) do
-    if v:IsA("Atmosphere") then
-        v:Destroy()
-    end
+if Terrain then
+	Terrain.WaterWaveSize = 0
+	Terrain.WaterWaveSpeed = 0
+	Terrain.WaterReflectance = 0
+	Terrain.WaterTransparency = 1
 end
 
--- Giảm đổ bóng
-Lighting.GlobalShadows = false
+pcall(function()
+	Lighting.Clouds:Destroy()
+end)
 
--- Tắt các hiệu ứng trong Lighting
-for _, v in ipairs(Lighting:GetChildren()) do
-	if v:IsA("BloomEffect")
-	or v:IsA("BlurEffect")
+for _,v in ipairs(Lighting:GetChildren()) do
+	if v:IsA("Atmosphere")
+	or v:IsA("Sky")
+	or v:IsA("BloomEffect")
 	or v:IsA("SunRaysEffect")
 	or v:IsA("ColorCorrectionEffect")
+	or v:IsA("BlurEffect")
 	or v:IsA("DepthOfFieldEffect") then
-		v.Enabled = false
+		v:Destroy()
 	end
 end
 
-print("Fix Lag + Remove Fog Enabled!")
+task.spawn(function()
+	while task.wait(3) do
+		for _,v in ipairs(workspace:GetDescendants()) do
+			if v:IsA("ParticleEmitter")
+			or v:IsA("Trail")
+			or v:IsA("Smoke")
+			or v:IsA("Fire")
+			or v:IsA("Sparkles")
+			or v:IsA("Explosion") then
+				v:Destroy()
+			end
+		end
+	end
+end)
 
 local logo = Instance.new("TextLabel")
 logo.Parent = gui
-logo.Size = UDim2.new(0,180,0,30)
+logo.Size = UDim2.new(0,150,0,30)
 logo.Position = UDim2.new(1,-190,0,10)
 logo.BackgroundTransparency = 1
-logo.Text = "@yrid_raden_or🇻🇳"
+logo.Text = " nhớ fl nha❤️@yrid_raden_or🇻🇳"
 logo.TextColor3 = Color3.fromRGB(255,255,255)
 logo.TextStrokeTransparency = 0.5
 logo.TextScaled = true
