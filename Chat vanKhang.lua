@@ -11,7 +11,7 @@ gui.Parent = player:WaitForChild("PlayerGui")
 -- Nút Chat
 local toggle = Instance.new("TextButton")
 toggle.Parent = gui
-toggle.Size = UDim2.new(0,5,0,50)
+toggle.Size = UDim2.new(0,60,0,60)
 toggle.Position = UDim2.new(0,20,0.5,-30)
 toggle.Text = "🇻🇳"
 toggle.TextScaled = true
